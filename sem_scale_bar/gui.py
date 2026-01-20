@@ -34,6 +34,7 @@ def run_gui():
             sg.B("label: left", button_color=("orange", "gray"), tooltip="Default"),
             sg.B("label: right", button_color=(sg.theme_background_color())),
         ],
+        [sg.Checkbox("Use standard 1-2-5 bar sizes", key="-StandardSizes-")],
         [sg.Push(), sg.B("Process"), sg.Push()],
         [sg.Output(size=(60, 10))],
         [sg.Push(), sg.B("Exit"), sg.Push()],
@@ -46,6 +47,7 @@ def run_gui():
     corner = "right"
     label_corner = "left"
     label = ""
+    use_standard_sizes = False
 
     chosen_color = "white"
     chosen_language = "English"
@@ -101,6 +103,10 @@ def run_gui():
             label = values["-Label-"]
         except Exception:
             pass
+        try:
+            use_standard_sizes = values["-StandardSizes-"]
+        except Exception:
+            pass
 
         if event == "Process":
             if folder is not None:
@@ -115,12 +121,22 @@ def run_gui():
                             label,
                             label_corner,
                             k,
+                            use_standard_sizes,
                         )
                 k += 1
                 folder = None
                 print("Process is complete. Check initial folder.")
             elif file is not None:
-                process_file(file, language, rect_color, corner, label, label_corner, k)
+                process_file(
+                    file,
+                    language,
+                    rect_color,
+                    corner,
+                    label,
+                    label_corner,
+                    k,
+                    use_standard_sizes,
+                )
                 k += 1
                 file = None
                 print("Process is complete. Check initial folder.")
