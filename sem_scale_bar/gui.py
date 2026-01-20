@@ -41,6 +41,13 @@ def run_gui():
             sg.B("label: right", button_color=(sg.theme_background_color())),
         ],
         [sg.Checkbox("Use standard 1-2-5 bar sizes", key="-StandardSizes-")],
+        [
+            sg.Checkbox(
+                "Use LZW compression for TIFF outputs",
+                key="-LzwCompression-",
+                default=True,
+            )
+        ],
         [sg.Push(), sg.B("Process"), sg.Push()],
         [sg.Output(size=(60, 10))],
         [sg.Push(), sg.B("Exit"), sg.Push()],
@@ -55,6 +62,7 @@ def run_gui():
     label = ""
     use_standard_sizes = False
     use_output_dir = False
+    lzw_compression = True
 
     chosen_color = "white"
     chosen_language = "English"
@@ -116,6 +124,10 @@ def run_gui():
         except Exception:
             pass
         try:
+            lzw_compression = values["-LzwCompression-"]
+        except Exception:
+            pass
+        try:
             use_output_dir = values["-UseOutputDir-"]
         except Exception:
             pass
@@ -150,6 +162,7 @@ def run_gui():
                             label_corner,
                             k,
                             use_standard_sizes,
+                            lzw_compression,
                             output_path=output_path,
                         )
                 k += 1
@@ -174,6 +187,7 @@ def run_gui():
                     label_corner,
                     k,
                     use_standard_sizes,
+                    lzw_compression,
                     output_path=output_path,
                 )
                 k += 1

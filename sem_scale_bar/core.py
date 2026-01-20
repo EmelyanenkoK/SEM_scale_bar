@@ -413,6 +413,7 @@ def process_file(
     label_corner,
     k,
     use_standard_sizes,
+    lzw_compression=True,
     output_path=None,
 ):
     folder, filename_ext = os.path.split(full_file_name)
@@ -437,9 +438,16 @@ def process_file(
                 use_standard_sizes,
             )
             if output_path:
-                result.save(output_path)
+                if lzw_compression:
+                    result.save(output_path, compression="tiff_lzw")
+                else:
+                    result.save(output_path)
             else:
-                result.save(f"{folder}/{short_file_name}_cut_{k}.{extension}")
+                output_file = f"{folder}/{short_file_name}_cut_{k}.{extension}"
+                if lzw_compression:
+                    result.save(output_file, compression="tiff_lzw")
+                else:
+                    result.save(output_file)
         except:
             print("Error during procession ", full_file_name, ".")
 

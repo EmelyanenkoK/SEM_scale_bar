@@ -57,6 +57,12 @@ def build_parser():
         help="Use standard 1-2-5 scale bar sizes and keep the bar area constant",
     )
     parser.add_argument(
+        "--no-lzw-compression",
+        dest="lzw_compression",
+        action="store_false",
+        help="Disable LZW compression for TIFF outputs (default: enabled)",
+    )
+    parser.add_argument(
         "--output-dir",
         help=(
             "Output directory for processed images. When set, keeps original "
@@ -84,6 +90,7 @@ def process_path(
     label_corner,
     k,
     use_standard_sizes,
+    lzw_compression,
     output_dir=None,
 ):
     input_root = path if os.path.isdir(path) else os.path.dirname(path)
@@ -99,6 +106,7 @@ def process_path(
             label_corner,
             k,
             use_standard_sizes,
+            lzw_compression,
             output_path=output_path,
         )
 
@@ -119,6 +127,7 @@ def main(argv=None):
         args.label_corner,
         args.output_index,
         args.standard_sizes,
+        args.lzw_compression,
         output_dir=args.output_dir,
     )
     if args.output_dir:
