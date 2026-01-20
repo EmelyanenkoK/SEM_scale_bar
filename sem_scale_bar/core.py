@@ -264,10 +264,12 @@ def draw_bar(
     if corner == "right":
         width = img.shape[1]
         # draw filled rectangle at the down right corner
+        rect_left = width - rect_width
+        rect_right = width
         img2.rectangle(
             [
-                (width - rect_width, height - rect_height),  # left upside corner
-                (width, height),  # right downside corner
+                (rect_left, height - rect_height),  # left upside corner
+                (rect_right, height),  # right downside corner
             ],
             fill=rect_color,
             outline=rect_color,
@@ -275,20 +277,34 @@ def draw_bar(
     else:
         width = 0
         # draw filled rectangle at the down left corner
+        rect_left = 0
+        rect_right = rect_width
         img2.rectangle(
             [
-                (0, height - rect_height),  # left upside corner
-                (rect_width, height),  # right downside corner
+                (rect_left, height - rect_height),  # left upside corner
+                (rect_right, height),  # right downside corner
             ],
             fill=rect_color,
             outline=rect_color,
         )
 
     # draw contrast bar in the rectangle
+    if use_standard_sizes:
+        bar_area_left = (
+            rect_left + round(20 * n)
+            if corner == "left"
+            else rect_right - rect_bar_width - round(20 * n)
+        )
+        bar_area_start = bar_area_left + (rect_bar_width - bar) / 2
+        bar_start = bar_area_start
+        bar_end = bar_area_start + bar
+    else:
+        bar_start = abs(width - bar - round(20 * n))
+        bar_end = abs(width - round(20 * n))
     img2.line(
         [
-            (abs(width - bar - round(20 * n)), height - round(30 * n)),
-            (abs(width - round(20 * n)), height - round(30 * n)),
+            (bar_start, height - round(30 * n)),
+            (bar_end, height - round(30 * n)),
         ],
         fill=bar_color,
         width=round(20 * n),
