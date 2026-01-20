@@ -1,7 +1,7 @@
 # SEM_scale_bar
 SEM_scale_bar is a software for fast processing of images obtained from scanning electron microscope (SEM). The software cuts an info-panel from the image and creates a scale bar according to the image's metadata.
 
-SEM_scale_bar processed all SEM images that it finds in the folder for seconds. By default, English language, a white background for scale bar, and right-down corner are set (just press 'Process' if you don't want to change these settings). The "Label" input allows you to put a label on the SEM image in the upper left or right corner. The processed images are saved to the same folder where the original RAM images are located.
+SEM_scale_bar processed all SEM images that it finds in the folder for seconds. By default, English language, a white background for scale bar, and right-down corner are set (just press 'Process' if you don't want to change these settings). The background can also be set to transparent to draw only the bar/label outlines without the filled box. The "Label" input allows you to put a label on the SEM image in the upper left or right corner. The processed images are saved to the same folder where the original RAM images are located.
 
 SEM_scale_bar is licensed under the General Public Licenses (GPL), which allows all users to use, share, and modify the software freely.
 
@@ -32,7 +32,7 @@ python -m pip install FreeSimpleGUI
 
 ### Required vs optional options
 
-The only required CLI argument is the input path (file or folder). All other options are optional and default to English language, a white background, right scale-bar corner, left label corner, no label text, and output saved next to the original files (or in the provided output folder). The output index and standard sizes options are also optional and only need to be set when you want a different filename index or standardized 1-2-5 bar sizes.
+The only required CLI argument is the input path (file or folder). All other options are optional and default to English language, a white background (use `transparent` to skip the background box), right scale-bar corner, left label corner, no label text, LZW compression enabled for TIFF outputs, and output saved next to the original files (or in the provided output folder). The output index and standard sizes options are also optional and only need to be set when you want a different filename index or standardized 1-2-5 bar sizes.
 
 Run the CLI directly:
 
@@ -44,6 +44,12 @@ python -m sem_scale_bar.cli /path/to/image_or_folder \
   --label-text "a)" \
   --label-corner left \
   --output-index 1
+```
+
+Disable LZW compression for TIFF outputs:
+
+```bash
+python -m sem_scale_bar.cli /path/to/image_or_folder --no-lzw-compression
 ```
 
 Run the package entrypoint (GUI if available, otherwise CLI). Use `--headless` to force CLI mode:
