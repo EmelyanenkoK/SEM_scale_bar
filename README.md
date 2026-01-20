@@ -10,3 +10,23 @@ The current version (v4) works with SEM images ("tif" and "png" extensions) obta
 The actual version of the software can be downloaded from our lab's web page (http://oxide.ru/?q=content/%D0%BF%D0%BE).
 
 If you are going to publish SEM images processed using SEM_scale_bar in a scientific article, we will be glad if you mark the use of SEM_scale_bar in the "Acknowledgements" section.
+
+## Command-line usage
+
+Run the CLI directly:
+
+```bash
+python -m sem_scale_bar.cli /path/to/image_or_folder \
+  --language English \
+  --background-color white \
+  --scale-bar-corner right \
+  --label-text "a)" \
+  --label-corner left \
+  --output-index 1
+```
+
+Run the package entrypoint (GUI if available, otherwise CLI). Use `--headless` to force CLI mode:
+
+```bash
+python -m sem_scale_bar --headless /path/to/folder
+```
