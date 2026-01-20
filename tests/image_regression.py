@@ -252,7 +252,11 @@ def verify_references():
                     output_dir, os.path.basename(reference)
                 )
                 process_case_direct(case, generated)
-                compare_images(generated, reference)
+                try:
+                  compare_images(generated, reference)
+                except Exception as e:
+                  print(case)
+                  raise e
 
 
 def build_parser():

@@ -6,11 +6,11 @@ import tifffile
 from PIL import Image, ImageDraw, ImageFont
 
 _FONT_CANDIDATES = (
+    "arial.ttf",
     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf",
     "DejaVuSans.ttf",
     "Arial Unicode.ttf",
-    "arial.ttf",
 )
 
 
