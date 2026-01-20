@@ -5,6 +5,23 @@ import png
 import tifffile
 from PIL import Image, ImageDraw, ImageFont
 
+_FONT_CANDIDATES = (
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf",
+    "DejaVuSans.ttf",
+    "Arial Unicode.ttf",
+    "arial.ttf",
+)
+
+
+def _load_font(font_size):
+    for candidate in _FONT_CANDIDATES:
+        try:
+            return ImageFont.truetype(candidate, font_size)
+        except OSError:
+            continue
+    return ImageFont.load_default()
+
 __all__ = [
     "extract_png_chunks",
     "get_scale",
@@ -244,7 +261,7 @@ def draw_bar(
 
     n = img.shape[1] / 2048  # make font size and bar size match image size
     font_size = round(80 * n)
-    font = ImageFont.truetype("arial.ttf", font_size)
+    font = _load_font(font_size)
     text_length = img2.textlength(scale_text, font=font)
     bbox = img2.textbbox((0, 0), scale_text, font=font)
     text_height = bbox[3] - bbox[1]
@@ -376,7 +393,7 @@ def draw_bar(
         (x, y),
         scale_text,
         fill=bar_color,
-        font=ImageFont.truetype("arial.ttf", font_size),
+        font=font,
         stroke_width=outline_width if transparent_background else 0,
         stroke_fill=outline_color if transparent_background else None,
     )
@@ -387,7 +404,7 @@ def draw_bar(
             (x_label, 0),
             label,
             fill=bar_color,
-            font=ImageFont.truetype("arial.ttf", font_size),
+            font=font,
             stroke_width=outline_width if transparent_background else 0,
             stroke_fill=outline_color if transparent_background else None,
         )
