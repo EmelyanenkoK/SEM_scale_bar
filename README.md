@@ -30,6 +30,17 @@ python -m pip install FreeSimpleGUI
 
 ## Command-line usage
 
+### Option descriptions
+
+Visual option representation
+
+| Option | Visual option representation |
+| --- | --- |
+| English white | ![English white](docs/option-visuals/english-white.png) |
+| Russian, black | ![Russian, black](docs/option-visuals/russian-black.png) |
+| English transparent | ![English transparent](docs/option-visuals/english-transparent.png) |
+| Custom label | ![Custom label](docs/option-visuals/custom-label.png) |
+
 ### Required vs optional options
 
 The only required CLI argument is the input path (file or folder). All other options are optional and default to English language, a white background (use `transparent` to skip the background box), right scale-bar corner, left label corner, no label text, LZW compression enabled for TIFF outputs, and output saved next to the original files (or in the provided output folder). The output index and standard sizes options are also optional and only need to be set when you want a different filename index or standardized 1-2-5 bar sizes.
