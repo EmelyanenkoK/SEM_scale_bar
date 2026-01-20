@@ -49,6 +49,7 @@ def run_gui():
                 default=True,
             )
         ],
+        [sg.Checkbox("Add end ticks to scale bar", key="-EndTicks-")],
         [sg.Push(), sg.B("Process"), sg.Push()],
         [sg.Output(size=(60, 10))],
         [sg.Push(), sg.B("Exit"), sg.Push()],
@@ -64,6 +65,7 @@ def run_gui():
     use_standard_sizes = False
     use_output_dir = False
     lzw_compression = True
+    end_ticks = False
 
     chosen_color = "white"
     chosen_language = "English"
@@ -129,6 +131,10 @@ def run_gui():
         except Exception:
             pass
         try:
+            end_ticks = values["-EndTicks-"]
+        except Exception:
+            pass
+        try:
             use_output_dir = values["-UseOutputDir-"]
         except Exception:
             pass
@@ -163,6 +169,7 @@ def run_gui():
                             label_corner,
                             k,
                             use_standard_sizes,
+                            end_ticks,
                             lzw_compression,
                             output_path=output_path,
                         )
@@ -188,6 +195,7 @@ def run_gui():
                     label_corner,
                     k,
                     use_standard_sizes,
+                    end_ticks,
                     lzw_compression,
                     output_path=output_path,
                 )

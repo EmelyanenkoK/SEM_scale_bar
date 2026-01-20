@@ -2,8 +2,6 @@ import argparse
 import os
 import sys
 
-from sem_scale_bar.core import build_output_path, process_file
-
 
 def build_parser():
     parser = argparse.ArgumentParser(
@@ -57,6 +55,11 @@ def build_parser():
         help="Use standard 1-2-5 scale bar sizes and keep the bar area constant",
     )
     parser.add_argument(
+        "--end-ticks",
+        action="store_true",
+        help="Add end ticks to the scale bar",
+    )
+    parser.add_argument(
         "--no-lzw-compression",
         dest="lzw_compression",
         action="store_false",
@@ -90,9 +93,12 @@ def process_path(
     label_corner,
     k,
     use_standard_sizes,
+    end_ticks,
     lzw_compression,
     output_dir=None,
 ):
+    from sem_scale_bar.core import build_output_path, process_file
+
     input_root = path if os.path.isdir(path) else os.path.dirname(path)
     for file_path in iter_image_paths(path):
         print(f"Processing {file_path}...")
@@ -106,6 +112,7 @@ def process_path(
             label_corner,
             k,
             use_standard_sizes,
+            end_ticks,
             lzw_compression,
             output_path=output_path,
         )
@@ -127,6 +134,7 @@ def main(argv=None):
         args.label_corner,
         args.output_index,
         args.standard_sizes,
+        args.end_ticks,
         args.lzw_compression,
         output_dir=args.output_dir,
     )

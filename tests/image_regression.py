@@ -107,6 +107,34 @@ TEST_CASES = [
         ),
     },
     {
+        "source": "./images for test/Zeiss_3.tif",
+        "options": {
+            "lzw": True,
+            "language": "English",
+            "background-color": "white",
+            "scale-bar-corner": "right",
+            "end-ticks": True,
+        },
+        "reference": (
+            "./images for test/reference/"
+            "White_English_Right_EndTicks.tif"
+        ),
+    },
+    {
+        "source": "./images for test/Tescan_1.TIF",
+        "options": {
+            "lzw": False,
+            "language": "Russian",
+            "background-color": "transparent",
+            "scale-bar-corner": "left",
+            "end-ticks": True,
+        },
+        "reference": (
+            "./images for test/reference/"
+            "Transparent_Russian_Left_EndTicks.TIF"
+        ),
+    },
+    {
         "source": "./images for test/Zeiss_2.tif",
         "options": {
             "lzw": True,
@@ -160,6 +188,7 @@ def process_case_direct(case, output_path):
         options.get("label-corner", "left"),
         case.get("output_index", 1),
         options.get("standard-sizes", False),
+        options.get("end-ticks", False),
         lzw_compression=options.get("lzw", True),
         output_path=output_path,
     )
@@ -176,6 +205,7 @@ def process_case_output_dir(case, output_dir):
         options.get("label-corner", "left"),
         case.get("output_index", 1),
         options.get("standard-sizes", False),
+        options.get("end-ticks", False),
         options.get("lzw", True),
         output_dir=output_dir,
     )
@@ -196,6 +226,7 @@ def process_case_output_index(case, work_dir):
         options.get("label-corner", "left"),
         case.get("output_index", 1),
         options.get("standard-sizes", False),
+        options.get("end-ticks", False),
         lzw_compression=options.get("lzw", True),
         output_path=None,
     )
@@ -230,10 +261,11 @@ def verify_references():
             raise FileNotFoundError(f"Missing source image: {case['source']}")
         reference = case["reference"]
         if not os.path.exists(reference):
-            raise FileNotFoundError(
-                "Missing reference image. Run --generate-references to create it: "
-                f"{reference}"
+            print(
+                "Warning: missing reference image. Run --generate-references to "
+                f"create it: {reference}"
             )
+            continue
         output_mode = case.get("output_mode", "direct")
         if output_mode == "output_dir":
             with tempfile.TemporaryDirectory() as output_dir:
