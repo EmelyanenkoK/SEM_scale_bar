@@ -247,7 +247,15 @@ def get_bar(img, pixel_size, lang, use_standard_sizes):
 
 
 def draw_bar(
-    img, tags, lang, rect_color, corner, label, label_corner, use_standard_sizes
+    img,
+    tags,
+    lang,
+    rect_color,
+    corner,
+    label,
+    label_corner,
+    use_standard_sizes,
+    end_ticks=False,
 ):
     img1 = Image.fromarray(img)
     img1 = img1.convert("RGB")
@@ -330,25 +338,130 @@ def draw_bar(
         bar_end = abs(width - round(20 * n))
     bar_y = height - round(30 * n)
     bar_thickness = round(20 * n)
-    if transparent_background:
+    tick_thickness = max(1, round(bar_thickness / 3))
+    tick_height = round(40 * n)
+    if transparent_background and end_ticks:
+        tick_half_height = tick_height / 2
+        tick_half_width = tick_thickness / 2
+        tick_positions = [
+            bar_start + tick_half_width,
+            bar_end - tick_half_width,
+        ]
+        outline_pad = outline_width / 2
+        img2.rectangle(
+            [
+                (bar_start - outline_pad, bar_y - bar_thickness / 2 - outline_pad),
+                (bar_end + outline_pad, bar_y + bar_thickness / 2 + outline_pad),
+            ],
+            fill=None,
+            outline=outline_color,
+            width=outline_width,
+        )
+        for tick_x in tick_positions:
+            img2.rectangle(
+                [
+                    (
+                        tick_x - tick_half_width - outline_pad,
+                        bar_y - tick_half_height - outline_pad,
+                    ),
+                    (
+                        tick_x + tick_half_width + outline_pad,
+                        bar_y + tick_half_height + outline_pad,
+                    ),
+                ],
+                fill=None,
+                outline=outline_color,
+                width=outline_width,
+            )
         img2.rectangle(
             [
                 (bar_start, bar_y - bar_thickness / 2),
                 (bar_end, bar_y + bar_thickness / 2),
             ],
             fill=bar_color,
-            outline=outline_color,
-            width=outline_width,
+            outline=None,
         )
+        for tick_x in tick_positions:
+            img2.rectangle(
+                [
+                    (tick_x - tick_half_width, bar_y - tick_half_height),
+                    (tick_x + tick_half_width, bar_y + tick_half_height),
+                ],
+                fill=bar_color,
+                outline=None,
+            )
     else:
-        img2.line(
-            [
-                (bar_start, bar_y),
-                (bar_end, bar_y),
-            ],
-            fill=bar_color,
-            width=bar_thickness,
-        )
+        if transparent_background:
+            outline_pad = outline_width / 2
+            img2.rectangle(
+                [
+                    (bar_start - outline_pad, bar_y - bar_thickness / 2 - outline_pad),
+                    (bar_end + outline_pad, bar_y + bar_thickness / 2 + outline_pad),
+                ],
+                fill=None,
+                outline=outline_color,
+                width=outline_width,
+            )
+            img2.rectangle(
+                [
+                    (bar_start, bar_y - bar_thickness / 2),
+                    (bar_end, bar_y + bar_thickness / 2),
+                ],
+                fill=bar_color,
+                outline=None,
+            )
+        else:
+            img2.line(
+                [
+                    (bar_start, bar_y),
+                    (bar_end, bar_y),
+                ],
+                fill=bar_color,
+                width=bar_thickness,
+            )
+        if end_ticks:
+            tick_half_height = tick_height / 2
+            tick_positions = [
+                bar_start + tick_thickness / 2,
+                bar_end - tick_thickness / 2,
+            ]
+            if transparent_background:
+                outline_pad = outline_width / 2
+                tick_half_width = tick_thickness / 2
+                for tick_x in tick_positions:
+                    img2.rectangle(
+                        [
+                            (
+                                tick_x - tick_half_width - outline_pad,
+                                bar_y - tick_half_height - outline_pad,
+                            ),
+                            (
+                                tick_x + tick_half_width + outline_pad,
+                                bar_y + tick_half_height + outline_pad,
+                            ),
+                        ],
+                        fill=None,
+                        outline=outline_color,
+                        width=outline_width,
+                    )
+                    img2.rectangle(
+                        [
+                            (tick_x - tick_half_width, bar_y - tick_half_height),
+                            (tick_x + tick_half_width, bar_y + tick_half_height),
+                        ],
+                        fill=bar_color,
+                        outline=None,
+                    )
+            else:
+                for tick_x in tick_positions:
+                    img2.line(
+                        [
+                            (tick_x, bar_y - tick_half_height),
+                            (tick_x, bar_y + tick_half_height),
+                        ],
+                        fill=bar_color,
+                        width=tick_thickness,
+                    )
 
     # label box
     if label != "":
@@ -430,6 +543,7 @@ def process_file(
     label_corner,
     k,
     use_standard_sizes,
+    end_ticks=False,
     lzw_compression=True,
     output_path=None,
 ):
@@ -453,6 +567,7 @@ def process_file(
                 label,
                 label_corner,
                 use_standard_sizes,
+                end_ticks,
             )
             if output_path:
                 if lzw_compression:
@@ -482,6 +597,7 @@ def process_file(
                 label,
                 label_corner,
                 use_standard_sizes,
+                end_ticks,
             )
             if output_path:
                 result.save(output_path)

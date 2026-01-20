@@ -1,7 +1,7 @@
 # SEM_scale_bar
 SEM_scale_bar is a software for fast processing of images obtained from scanning electron microscope (SEM). The software cuts an info-panel from the image and creates a scale bar according to the image's metadata.
 
-SEM_scale_bar processed all SEM images that it finds in the folder for seconds. By default, English language, a white background for scale bar, and right-down corner are set (just press 'Process' if you don't want to change these settings). The background can also be set to transparent to draw only the bar/label outlines without the filled box. The "Label" input allows you to put a label on the SEM image in the upper left or right corner. The processed images are saved to the same folder where the original RAM images are located.
+SEM_scale_bar processed all SEM images that it finds in the folder for seconds. By default, English language, a white background for scale bar, and right-down corner are set (just press 'Process' if you don't want to change these settings). The background can also be set to transparent to draw only the bar/label outlines without the filled box; the scale bar outline remains visible on all sides. The "Label" input allows you to put a label on the SEM image in the upper left or right corner, and you can optionally add end ticks to the scale bar. The processed images are saved to the same folder where the original RAM images are located.
 
 SEM_scale_bar is licensed under the General Public Licenses (GPL), which allows all users to use, share, and modify the software freely.
 
@@ -34,16 +34,13 @@ python -m pip install FreeSimpleGUI
 
 Visual option representation
 
-| Option | Visual option representation |
-| --- | --- |
-| English white | ![English white](docs/option-visuals/english-white.png) |
-| Russian, black | ![Russian, black](docs/option-visuals/russian-black.png) |
-| English transparent | ![English transparent](docs/option-visuals/english-transparent.png) |
-| Custom label | ![Custom label](docs/option-visuals/custom-label.png) |
+| Option | English white | Russian, black | English transparent | Custom label |
+| --- | --- | --- | --- | --- |
+| Visual option representation | ![English white](docs/option-visuals/english-white.png) | ![Russian, black](docs/option-visuals/russian-black.png) | ![English transparent](docs/option-visuals/english-transparent.png) | ![Custom label](docs/option-visuals/custom-label.png) |
 
 ### Required vs optional options
 
-The only required CLI argument is the input path (file or folder). All other options are optional and default to English language, a white background (use `transparent` to skip the background box), right scale-bar corner, left label corner, no label text, LZW compression enabled for TIFF outputs, and output saved next to the original files (or in the provided output folder). The output index and standard sizes options are also optional and only need to be set when you want a different filename index or standardized 1-2-5 bar sizes.
+The only required CLI argument is the input path (file or folder). All other options are optional and default to English language, a white background (use `transparent` to skip the background box), right scale-bar corner, left label corner, no label text, no end ticks, LZW compression enabled for TIFF outputs, and output saved next to the original files (or in the provided output folder). The output index and standard sizes options are also optional and only need to be set when you want a different filename index or standardized 1-2-5 bar sizes.
 
 Run the CLI directly:
 
@@ -54,6 +51,7 @@ python -m sem_scale_bar.cli /path/to/image_or_folder \
   --scale-bar-corner right \
   --label-text "a)" \
   --label-corner left \
+  --end-ticks \
   --output-index 1
 ```
 
@@ -82,3 +80,7 @@ In the GUI, enable "Output to separate folder" and choose a folder. If the check
 ### Standard 1-2-5 sizes option
 
 Use `--standard-sizes` (CLI) or "Use standard 1-2-5 bar sizes" (GUI) to round the scale bar length to the nearest 1-2-5 sequence (1, 2, 5 × 10^n). This keeps the bar area width consistent while producing standardized scale lengths.
+
+### End ticks option
+
+Use `--end-ticks` (CLI) or "Add end ticks to scale bar" (GUI) to add vertical ticks at the bar endpoints for clearer measurement endpoints.
