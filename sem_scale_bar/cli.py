@@ -51,6 +51,11 @@ def build_parser():
         default=1,
         help="Index used in output filenames (default: 1)",
     )
+    parser.add_argument(
+        "--standard-sizes",
+        action="store_true",
+        help="Use standard 1-2-5 scale bar sizes and keep the bar area constant",
+    )
     return parser
 
 
@@ -63,10 +68,21 @@ def iter_image_paths(path):
         yield path
 
 
-def process_path(path, language, rect_color, corner, label, label_corner, k):
+def process_path(
+    path, language, rect_color, corner, label, label_corner, k, use_standard_sizes
+):
     for file_path in iter_image_paths(path):
         print(f"Processing {file_path}...")
-        process_file(file_path, language, rect_color, corner, label, label_corner, k)
+        process_file(
+            file_path,
+            language,
+            rect_color,
+            corner,
+            label,
+            label_corner,
+            k,
+            use_standard_sizes,
+        )
 
 
 def main(argv=None):
@@ -84,6 +100,7 @@ def main(argv=None):
         args.label_text,
         args.label_corner,
         args.output_index,
+        args.standard_sizes,
     )
     print("Processing complete. Check the input folder for outputs.")
     return 0

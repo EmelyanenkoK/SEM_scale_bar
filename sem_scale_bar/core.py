@@ -18,6 +18,20 @@ __all__ = [
 ]
 
 
+def _standardize_scale_value(value):
+    if value <= 0:
+        return value
+    exponent = 10 ** np.floor(np.log10(value))
+    leading = value / exponent
+    if leading < 2:
+        standard = 1
+    elif leading < 5:
+        standard = 2
+    else:
+        standard = 5
+    return standard * exponent
+
+
 def extract_png_chunks(filename):
     reader = png.Reader(filename)
     chunks = []
@@ -170,16 +184,21 @@ def get_tags_from_tiff(tif):
     return tif_tags
 
 
-def get_bar(img, pixel_size, lang):
+def get_bar(img, pixel_size, lang, use_standard_sizes):
     _, width = img.shape[:2]
-    bar = width * pixel_size / 6  # bar lenght is about 1/6 of image width, microns, not an integer
+    bar = (
+        width * pixel_size / 6
+    )  # bar lenght is about 1/6 of image width, microns, not an integer
     if bar >= 0.55:
-        if bar >= 100:
-            bar = round(bar / 100) * 100
-        elif 100 > bar >= 10:
-            bar = round(bar / 10) * 10
+        if use_standard_sizes:
+            bar = _standardize_scale_value(bar)
         else:
-            bar = round(bar)
+            if bar >= 100:
+                bar = round(bar / 100) * 100
+            elif 100 > bar >= 10:
+                bar = round(bar / 10) * 10
+            else:
+                bar = round(bar)
         bar_pixel_size = bar / pixel_size
         if lang == "Russian":
             scale = "мкм"
@@ -187,10 +206,16 @@ def get_bar(img, pixel_size, lang):
             scale = "\u03BCm"
 
     else:
-        if bar >= 0.1:
-            bar = round(bar * 10) * 100
+        bar = bar * 1000
+        if use_standard_sizes:
+            bar = _standardize_scale_value(bar)
         else:
-            bar = round(bar * 100) * 10
+            if bar >= 100:
+                bar = round(bar / 100) * 100
+            elif 100 > bar >= 10:
+                bar = round(bar / 10) * 10
+            else:
+                bar = round(bar)
         bar_pixel_size = bar / (pixel_size * 1000)
         if lang == "Russian":
             scale = "нм"
@@ -200,14 +225,16 @@ def get_bar(img, pixel_size, lang):
     return (bar, bar_pixel_size, scale)
 
 
-def draw_bar(img, tags, lang, rect_color, corner, label, label_corner):
+def draw_bar(
+    img, tags, lang, rect_color, corner, label, label_corner, use_standard_sizes
+):
     img1 = Image.fromarray(img)
     img1 = img1.convert("RGB")
     img2 = ImageDraw.Draw(img1)
     height = img.shape[0]
 
     pixel_size = get_scale(tags)
-    bar_data = get_bar(img, pixel_size, lang)
+    bar_data = get_bar(img, pixel_size, lang, use_standard_sizes)
     bar = round(bar_data[1])
     scale_text = f"{bar_data[0]} {bar_data[2]}"
 
@@ -222,7 +249,8 @@ def draw_bar(img, tags, lang, rect_color, corner, label, label_corner):
     label_text_height = label_box[3] - label_box[1] + round(40 * n)
 
     rect_height = text_height + round(67 * n)
-    rect_width = bar + round(45 * n)  # bar width, pixels
+    rect_bar_width = round(img.shape[1] / 6) if use_standard_sizes else bar
+    rect_width = rect_bar_width + round(45 * n)  # bar width, pixels
 
     if rect_color == "black":
         bar_color = "white"
@@ -313,7 +341,9 @@ def draw_bar(img, tags, lang, rect_color, corner, label, label_corner):
 
 
 # read full file path, process file (read tif metadata, cut panel, draw scale bar) and save result
-def process_file(full_file_name, lan, rect_color, corner, label, label_corner, k):
+def process_file(
+    full_file_name, lan, rect_color, corner, label, label_corner, k, use_standard_sizes
+):
     folder, filename_ext = os.path.split(full_file_name)
     short_file_name, extension = os.path.splitext(filename_ext)
     _, extension = extension.split(".")
@@ -324,7 +354,14 @@ def process_file(full_file_name, lan, rect_color, corner, label, label_corner, k
             tif_tags = get_tags_from_tiff(tif)
             img_cropped = cut_panel(img, tif_tags)
             result = draw_bar(
-                img_cropped, tif_tags, lan, rect_color, corner, label, label_corner
+                img_cropped,
+                tif_tags,
+                lan,
+                rect_color,
+                corner,
+                label,
+                label_corner,
+                use_standard_sizes,
             )
             result.save(f"{folder}/{short_file_name}_cut_{k}.{extension}")
         except:
@@ -336,7 +373,14 @@ def process_file(full_file_name, lan, rect_color, corner, label, label_corner, k
             chunks = extract_png_chunks(full_file_name)  # = tif_tags for png
             img_cropped = cut_panel(img, chunks)
             result = draw_bar(
-                img_cropped, chunks, lan, rect_color, corner, label, label_corner
+                img_cropped,
+                chunks,
+                lan,
+                rect_color,
+                corner,
+                label,
+                label_corner,
+                use_standard_sizes,
             )
             result.save(f"{folder}/{short_file_name}_cut_{k}.{extension}")
         except:
