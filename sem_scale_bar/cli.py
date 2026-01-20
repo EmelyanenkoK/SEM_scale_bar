@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 
-from sem_scale_bar.core import process_file
+from sem_scale_bar.core import build_output_path, process_file
 
 
 def build_parser():
@@ -56,6 +56,13 @@ def build_parser():
         action="store_true",
         help="Use standard 1-2-5 scale bar sizes and keep the bar area constant",
     )
+    parser.add_argument(
+        "--output-dir",
+        help=(
+            "Output directory for processed images. When set, keeps original "
+            "filenames and preserves the input folder structure."
+        ),
+    )
     return parser
 
 
@@ -69,10 +76,20 @@ def iter_image_paths(path):
 
 
 def process_path(
-    path, language, rect_color, corner, label, label_corner, k, use_standard_sizes
+    path,
+    language,
+    rect_color,
+    corner,
+    label,
+    label_corner,
+    k,
+    use_standard_sizes,
+    output_dir=None,
 ):
+    input_root = path if os.path.isdir(path) else os.path.dirname(path)
     for file_path in iter_image_paths(path):
         print(f"Processing {file_path}...")
+        output_path = build_output_path(file_path, output_dir, input_root)
         process_file(
             file_path,
             language,
@@ -82,6 +99,7 @@ def process_path(
             label_corner,
             k,
             use_standard_sizes,
+            output_path=output_path,
         )
 
 
@@ -101,8 +119,12 @@ def main(argv=None):
         args.label_corner,
         args.output_index,
         args.standard_sizes,
+        output_dir=args.output_dir,
     )
-    print("Processing complete. Check the input folder for outputs.")
+    if args.output_dir:
+        print("Processing complete. Check the output folder for outputs.")
+    else:
+        print("Processing complete. Check the input folder for outputs.")
     return 0
 
 

@@ -1,6 +1,6 @@
 import os
 
-from sem_scale_bar.core import process_file
+from sem_scale_bar.core import build_output_path, process_file
 
 
 def run_gui():
@@ -10,6 +10,11 @@ def run_gui():
 
     layout = [
         [sg.B("Choose folder with SEM images"), sg.B("Choose one SEM image")],
+        [
+            sg.Checkbox("Output to separate folder", key="-UseOutputDir-"),
+            sg.Input(key="-OutputDir-", size=(35, 1), disabled=True),
+            sg.FolderBrowse("Choose output folder", target="-OutputDir-"),
+        ],
         [
             sg.T("Background colour:"),
             sg.B("white", button_color=("orange", "gray"), tooltip="Default"),
@@ -48,6 +53,7 @@ def run_gui():
     label_corner = "left"
     label = ""
     use_standard_sizes = False
+    use_output_dir = False
 
     chosen_color = "white"
     chosen_language = "English"
@@ -57,6 +63,7 @@ def run_gui():
     k = 1  # index for processed images
     folder = None
     file = None
+    output_dir = None
 
     while True:
         event, values = window.read()
@@ -107,12 +114,32 @@ def run_gui():
             use_standard_sizes = values["-StandardSizes-"]
         except Exception:
             pass
+        try:
+            use_output_dir = values["-UseOutputDir-"]
+        except Exception:
+            pass
+        try:
+            output_dir = values["-OutputDir-"] or None
+        except Exception:
+            pass
 
         if event == "Process":
+            if use_output_dir and not output_dir:
+                print("Choose an output folder or disable the output option.")
+                window.refresh()
+                continue
             if folder is not None:
+                input_root = folder
                 for root, _, files in os.walk(folder):
                     for file_name in files:
                         full_file_name = os.path.join(root, file_name)
+                        output_path = (
+                            build_output_path(
+                                full_file_name, output_dir, input_root
+                            )
+                            if use_output_dir
+                            else None
+                        )
                         process_file(
                             full_file_name,
                             language,
@@ -122,11 +149,21 @@ def run_gui():
                             label_corner,
                             k,
                             use_standard_sizes,
+                            output_path=output_path,
                         )
                 k += 1
                 folder = None
-                print("Process is complete. Check initial folder.")
+                if use_output_dir:
+                    print("Process is complete. Check output folder.")
+                else:
+                    print("Process is complete. Check initial folder.")
             elif file is not None:
+                input_root = os.path.dirname(file)
+                output_path = (
+                    build_output_path(file, output_dir, input_root)
+                    if use_output_dir
+                    else None
+                )
                 process_file(
                     file,
                     language,
@@ -136,10 +173,14 @@ def run_gui():
                     label_corner,
                     k,
                     use_standard_sizes,
+                    output_path=output_path,
                 )
                 k += 1
                 file = None
-                print("Process is complete. Check initial folder.")
+                if use_output_dir:
+                    print("Process is complete. Check output folder.")
+                else:
+                    print("Process is complete. Check initial folder.")
             else:
                 print("Choose folder or image.")
             window.refresh()
