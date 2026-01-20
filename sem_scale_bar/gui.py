@@ -6,6 +6,7 @@ from sem_scale_bar.core import build_output_path, process_file
 def run_gui():
     import FreeSimpleGUI as sg
 
+    sg.set_options(font=("DejaVu Sans", 12))
     sg.theme("NeonYellow1")  # window colours (theme); 'NeonGreen1' is fine, also
 
     layout = [
