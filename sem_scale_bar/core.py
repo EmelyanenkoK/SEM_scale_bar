@@ -256,37 +256,47 @@ def draw_bar(
     rect_bar_width = round(img.shape[1] / 6) if use_standard_sizes else bar
     rect_width = rect_bar_width + round(45 * n)  # bar width, pixels
 
-    if rect_color == "black":
+    transparent_background = rect_color == "transparent"
+    if transparent_background:
         bar_color = "white"
+        outline_color = "black"
+    elif rect_color == "black":
+        bar_color = "white"
+        outline_color = rect_color
     else:
         bar_color = "black"
+        outline_color = rect_color
+
+    outline_width = max(1, round(3 * n))
 
     if corner == "right":
         width = img.shape[1]
         # draw filled rectangle at the down right corner
         rect_left = width - rect_width
         rect_right = width
-        img2.rectangle(
-            [
-                (rect_left, height - rect_height),  # left upside corner
-                (rect_right, height),  # right downside corner
-            ],
-            fill=rect_color,
-            outline=rect_color,
-        )
+        if not transparent_background:
+            img2.rectangle(
+                [
+                    (rect_left, height - rect_height),  # left upside corner
+                    (rect_right, height),  # right downside corner
+                ],
+                fill=rect_color,
+                outline=rect_color,
+            )
     else:
         width = 0
         # draw filled rectangle at the down left corner
         rect_left = 0
         rect_right = rect_width
-        img2.rectangle(
-            [
-                (rect_left, height - rect_height),  # left upside corner
-                (rect_right, height),  # right downside corner
-            ],
-            fill=rect_color,
-            outline=rect_color,
-        )
+        if not transparent_background:
+            img2.rectangle(
+                [
+                    (rect_left, height - rect_height),  # left upside corner
+                    (rect_right, height),  # right downside corner
+                ],
+                fill=rect_color,
+                outline=rect_color,
+            )
 
     # draw contrast bar in the rectangle
     if use_standard_sizes:
@@ -301,14 +311,27 @@ def draw_bar(
     else:
         bar_start = abs(width - bar - round(20 * n))
         bar_end = abs(width - round(20 * n))
-    img2.line(
-        [
-            (bar_start, height - round(30 * n)),
-            (bar_end, height - round(30 * n)),
-        ],
-        fill=bar_color,
-        width=round(20 * n),
-    )
+    bar_y = height - round(30 * n)
+    bar_thickness = round(20 * n)
+    if transparent_background:
+        img2.rectangle(
+            [
+                (bar_start, bar_y - bar_thickness / 2),
+                (bar_end, bar_y + bar_thickness / 2),
+            ],
+            fill=bar_color,
+            outline=outline_color,
+            width=outline_width,
+        )
+    else:
+        img2.line(
+            [
+                (bar_start, bar_y),
+                (bar_end, bar_y),
+            ],
+            fill=bar_color,
+            width=bar_thickness,
+        )
 
     # label box
     if label != "":
@@ -316,26 +339,34 @@ def draw_bar(
             # draw filled rectangle at the up left corner
             label_width = 0
             x_label = round(50 * n) / 2
-            img2.rectangle(
-                [
-                    (0, 0),  # left upside corner
-                    (label_box[2] + round(50 * n), label_text_height),  # right downside corner
-                ],
-                fill=rect_color,
-                outline=rect_color,
-            )
+            if not transparent_background:
+                img2.rectangle(
+                    [
+                        (0, 0),  # left upside corner
+                        (
+                            label_box[2] + round(50 * n),
+                            label_text_height,
+                        ),  # right downside corner
+                    ],
+                    fill=rect_color,
+                    outline=rect_color,
+                )
         else:
             label_width = img.shape[1]
             x_label = label_width - label_box[2] - round(50 * n) / 2
             # draw filled rectangle at the up right corner
-            img2.rectangle(
-                [
-                    (label_width - label_box[2] - round(50 * n), 0),  # left upside corner
-                    (label_width, label_text_height),  # right downside corner
-                ],
-                fill=rect_color,
-                outline=rect_color,
-            )
+            if not transparent_background:
+                img2.rectangle(
+                    [
+                        (
+                            label_width - label_box[2] - round(50 * n),
+                            0,
+                        ),  # left upside corner
+                        (label_width, label_text_height),  # right downside corner
+                    ],
+                    fill=rect_color,
+                    outline=rect_color,
+                )
 
     x = abs(width - rect_width / 2) - text_length / 2
     y = height - rect_height
@@ -346,6 +377,8 @@ def draw_bar(
         scale_text,
         fill=bar_color,
         font=ImageFont.truetype("arial.ttf", font_size),
+        stroke_width=outline_width if transparent_background else 0,
+        stroke_fill=outline_color if transparent_background else None,
     )
 
     # draw label text
@@ -355,6 +388,8 @@ def draw_bar(
             label,
             fill=bar_color,
             font=ImageFont.truetype("arial.ttf", font_size),
+            stroke_width=outline_width if transparent_background else 0,
+            stroke_fill=outline_color if transparent_background else None,
         )
 
     return img1
