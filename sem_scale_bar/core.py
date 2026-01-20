@@ -14,6 +14,7 @@ __all__ = [
     "get_tags_from_tiff",
     "get_bar",
     "draw_bar",
+    "build_output_path",
     "process_file",
 ]
 
@@ -340,13 +341,31 @@ def draw_bar(
     return img1
 
 
+def build_output_path(full_file_name, output_dir, input_root=None):
+    if not output_dir:
+        return None
+    root = input_root if input_root else os.path.dirname(full_file_name)
+    relative_path = os.path.relpath(full_file_name, root)
+    return os.path.join(output_dir, relative_path)
+
+
 # read full file path, process file (read tif metadata, cut panel, draw scale bar) and save result
 def process_file(
-    full_file_name, lan, rect_color, corner, label, label_corner, k, use_standard_sizes
+    full_file_name,
+    lan,
+    rect_color,
+    corner,
+    label,
+    label_corner,
+    k,
+    use_standard_sizes,
+    output_path=None,
 ):
     folder, filename_ext = os.path.split(full_file_name)
     short_file_name, extension = os.path.splitext(filename_ext)
     _, extension = extension.split(".")
+    if output_path:
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
     if extension == "tif" or extension == "TIF" or extension == "tiff":
         try:
             tif = tifffile.TiffFile(full_file_name)
@@ -363,7 +382,10 @@ def process_file(
                 label_corner,
                 use_standard_sizes,
             )
-            result.save(f"{folder}/{short_file_name}_cut_{k}.{extension}")
+            if output_path:
+                result.save(output_path)
+            else:
+                result.save(f"{folder}/{short_file_name}_cut_{k}.{extension}")
         except:
             print("Error during procession ", full_file_name, ".")
 
@@ -382,7 +404,10 @@ def process_file(
                 label_corner,
                 use_standard_sizes,
             )
-            result.save(f"{folder}/{short_file_name}_cut_{k}.{extension}")
+            if output_path:
+                result.save(output_path)
+            else:
+                result.save(f"{folder}/{short_file_name}_cut_{k}.{extension}")
         except:
             print("Error during procession ", full_file_name, ".")
 
