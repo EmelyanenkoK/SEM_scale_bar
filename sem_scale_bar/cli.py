@@ -23,7 +23,7 @@ def build_parser():
     )
     parser.add_argument(
         "--background-color",
-        choices=["white", "black"],
+        choices=["white", "black", "transparent"],
         default="white",
         help="Background color for scale bar box (default: white)",
     )

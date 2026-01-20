@@ -19,6 +19,7 @@ def run_gui():
             sg.T("Background colour:"),
             sg.B("white", button_color=("orange", "gray"), tooltip="Default"),
             sg.B("black", button_color=(sg.theme_background_color())),
+            sg.B("transparent", button_color=(sg.theme_background_color())),
         ],
         [
             sg.T("Language:"),
@@ -74,7 +75,7 @@ def run_gui():
         if event == "Choose one SEM image":
             file = sg.popup_get_file("Select an image", no_window=True)
 
-        if event in ["white", "black"]:
+        if event in ["white", "black", "transparent"]:
             rect_color = event
             if chosen_color:
                 window[chosen_color].update(button_color=(sg.theme_background_color()))
