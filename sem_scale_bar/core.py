@@ -30,7 +30,10 @@ def _standardize_scale_value(value):
         standard = 2
     else:
         standard = 5
-    return standard * exponent
+    result = standard * exponent
+    if np.isclose(result, round(result)):
+        return int(round(result))
+    return result
 
 
 def extract_png_chunks(filename):
