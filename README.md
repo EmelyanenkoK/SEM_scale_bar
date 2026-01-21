@@ -34,33 +34,25 @@ python -m pip install FreeSimpleGUI
 
 Visual option representation
 
-<table>
-  <colgroup>
-    <col style="width:160px;">
-    <col style="width:160px;">
-    <col style="width:160px;">
-    <col style="width:160px;">
-    <col style="width:160px;">
-    <col style="width:160px;">
-  </colgroup>
+<table style="table-layout: fixed; width: 960px;">
   <thead>
     <tr>
-      <th>Option</th>
-      <th>English white</th>
-      <th>Russian, black</th>
-      <th>English transparent</th>
-      <th>Transparent endtics</th>
-      <th>Custom label</th>
+      <th style="width:160px;">Option</th>
+      <th style="width:160px;">English white</th>
+      <th style="width:160px;">Russian, black</th>
+      <th style="width:160px;">English transparent</th>
+      <th style="width:160px;">Transparent endtics</th>
+      <th style="width:160px;">Custom label</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>Visual option representation</td>
-      <td><div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/english-white.png" alt="English white" style="max-width:100%; max-height:100%;"></div></td>
-      <td><div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/russian-black.png" alt="Russian, black" style="max-width:100%; max-height:100%;"></div></td>
-      <td><div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/english-transparent.png" alt="English transparent" style="max-width:100%; max-height:100%;"></div></td>
-      <td><div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/transparent-tics.png" alt="Transparent end-tics" style="max-width:100%; max-height:100%;"></div></td>
-      <td><div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/custom-label.png" alt="Custom label" style="max-width:100%; max-height:100%;"></div></td>
+      <td style="width:160px;">Visual option representation</td>
+      <td style="width:160px;"><div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/english-white.png" alt="English white" style="max-width:100%; max-height:100%;"></div></td>
+      <td style="width:160px;"><div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/russian-black.png" alt="Russian, black" style="max-width:100%; max-height:100%;"></div></td>
+      <td style="width:160px;"><div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/english-transparent.png" alt="English transparent" style="max-width:100%; max-height:100%;"></div></td>
+      <td style="width:160px;"><div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/transparent-tics.png" alt="Transparent end-tics" style="max-width:100%; max-height:100%;"></div></td>
+      <td style="width:160px;"><div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/custom-label.png" alt="Custom label" style="max-width:100%; max-height:100%;"></div></td>
     </tr>
   </tbody>
 </table>
