@@ -34,7 +34,7 @@ python -m pip install FreeSimpleGUI
 
 Visual option representation
 
-| Option ========= | English white == | Russian, black = | English transparent | Transparent endtics | Custom label ==== |
+| Option | Eng white | Rus black | Eng transp | Transp endtics | Custom label |
 | --- | --- | --- | --- | --- | --- |
 | Visual option representation | ![English white](docs/option-visuals/english-white.png) | ![Russian, black](docs/option-visuals/russian-black.png) | ![English transparent](docs/option-visuals/english-transparent.png) | ![Transparent end-tics](docs/option-visuals/transparent-tics.png) | ![Custom label](docs/option-visuals/custom-label.png) |
 
