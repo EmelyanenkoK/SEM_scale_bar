@@ -36,7 +36,7 @@ Visual option representation
 
 | Option | English white | Russian, black | English transparent | Transparent endtics | Custom label |
 | --- | --- | --- | --- | --- | --- |
-| Visual option representation | ![English white](docs/option-visuals/english-white.png) | ![Russian, black](docs/option-visuals/russian-black.png) | ![English transparent](docs/option-visuals/english-transparent.png) | ![Transparent end-tics](docs/option-visuals/transparent-tics.png) | ![Custom label](docs/option-visuals/custom-label.png) |
+| Visual option representation | <div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/english-white.png" alt="English white" style="max-width:100%; max-height:100%;"></div> | <div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/russian-black.png" alt="Russian, black" style="max-width:100%; max-height:100%;"></div> | <div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/english-transparent.png" alt="English transparent" style="max-width:100%; max-height:100%;"></div> | <div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/transparent-tics.png" alt="Transparent end-tics" style="max-width:100%; max-height:100%;"></div> | <div style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"><img src="docs/option-visuals/custom-label.png" alt="Custom label" style="max-width:100%; max-height:100%;"></div> |
 
 ### Required vs optional options
 
